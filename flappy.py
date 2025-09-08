@@ -22,6 +22,8 @@ WHITE = (255, 255, 255)
 BLUE = (135, 206, 250)
 GREEN = (0, 200, 0)
 YELLOW = (255, 255, 0)
+ORANGE = (255, 165, 0)
+BLACK = (0, 0, 0)
 
 # Fonts
 FONT = pygame.font.SysFont("Arial", 32)
@@ -42,10 +44,25 @@ class Bird:
         self.y += self.velocity
 
     def draw(self, surface):
-        pygame.draw.circle(surface, YELLOW, (int(self.x), int(self.y)), self.radius)
+        # A simple bird shape
+        body_rect = pygame.Rect(self.x - self.radius, self.y - (self.radius * 0.75), self.radius * 2, self.radius * 1.5)
+        pygame.draw.ellipse(surface, YELLOW, body_rect)
+        
+        # Wing
+        wing_rect = pygame.Rect(self.x - 10, self.y, 20, 12)
+        pygame.draw.ellipse(surface, YELLOW, wing_rect)
+        pygame.draw.ellipse(surface, BLACK, wing_rect, 1) # outline for wing
+
+        # Eye
+        pygame.draw.circle(surface, BLACK, (int(self.x + 7), int(self.y - 5)), 3)
+
+        # Beak
+        beak_points = [(self.x + self.radius, self.y), (self.x + self.radius + 10, self.y - 3), (self.x + self.radius + 10, self.y + 3)]
+        pygame.draw.polygon(surface, ORANGE, beak_points)
 
     def get_rect(self):
-        return pygame.Rect(self.x - self.radius, self.y - self.radius, self.radius*2, self.radius*2)
+        # Adjust the bounding box to be a bit tighter and account for the beak
+        return pygame.Rect(self.x - self.radius, self.y - (self.radius * 0.75), self.radius * 2 + 10, self.radius * 1.5)
 
 # Pipe class
 class Pipe:
